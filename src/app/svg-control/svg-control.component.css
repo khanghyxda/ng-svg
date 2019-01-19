@@ -1,0 +1,14 @@
+.svg_select_points {
+    stroke-width: 0.5;
+    fill: gray;
+    stroke-dasharray: 10 10;
+    stroke: gray;
+    stroke-opacity: .8;
+    fill-opacity: .1;
+    pointer-events: none;
+}
+.svg_select_points {
+    fill: #fff;
+    stroke-dasharray: 1 1;
+    background: #fff;
+}

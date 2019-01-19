@@ -20,21 +20,18 @@ export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
   angle: number;
   cosa: number;
   sina: number;
-  matrix = 'matrix(1,0,0,1,0,0)';
+  rotate = 'rotate(30, 30, 30)';
 
   constructor() { }
 
   ngOnInit() {
-    this.angle = 30;
-    this.cosa = Math.cos(this.angle);
-    this.sina = Math.sin(this.angle);
-    // this.matrix = 'matrix(' + this.cosa + ',' + this.sina + ',' + -this.sina + ',' + this.cosa + ',0,0)';
     console.log(this.cosa);
     console.log(this.sina);
     this.size = new Size();
     this.size.width = 50;
-    this.size.height = 50;
+    this.size.height = 70;
     this.pt = this.slider.nativeElement.createSVGPoint();
+    this.rotate = 'rotate(30,' + (this.pt.x + this.size.width / 2) + ',' + (this.pt.y + this.size.height / 2 ) + ')';
   }
 
   ngOnDestroy(): void {

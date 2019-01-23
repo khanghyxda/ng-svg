@@ -1,49 +1,43 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { Subscription, fromEvent } from 'rxjs';
+import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { tap, mergeMap, startWith, takeUntil, take, flatMap, map, endWith } from 'rxjs/operators';
+import { Subscription, fromEvent } from 'rxjs';
+
 
 @Component({
-  selector: 'app-svg-control',
-  templateUrl: './svg-control.component.html',
-  styleUrls: ['./svg-control.component.css']
+  /* tslint:disable-next-line */
+  selector: '[app-paint-object]',
+  templateUrl: './paint-object.component.html',
+  styleUrls: ['./paint-object.component.css']
 })
-export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PaintObjectComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('slider') slider: ElementRef;
-  @ViewChild('rect') rect: ElementRef;
+  @ViewChild('main') main: ElementRef;
+  @ViewChild('image') image: ElementRef;
   @ViewChild('bottomright') bottomright: ElementRef;
   @ViewChild('topright') topright: ElementRef;
 
-  handle: Subscription;
+  controlSvg;
   pt: SVGPoint;
   size: Size;
   angle = 0;
-  cosa: number;
-  sina: number;
-  rotate = 'rotate(30 30 30)';
 
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit() {
-    console.log(this.cosa);
-    console.log(this.sina);
+    this.controlSvg = this.main.nativeElement.parentNode.parentNode;
     this.size = new Size();
     this.size.width = 50;
     this.size.height = 70;
-    this.pt = this.slider.nativeElement.createSVGPoint();
+    this.pt = this.controlSvg.createSVGPoint();
     this.pt.x = 50;
     this.pt.y = 50;
-    this.rotate = 'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') ';
-    console.log(this.rotate);
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   ngAfterViewInit(): void {
 
-    this.drag(this.slider.nativeElement, this.rect.nativeElement);
+    this.drag(this.controlSvg, this.image.nativeElement);
   }
 
   drag(parent, element) {
@@ -75,7 +69,7 @@ export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
       const objHeight = this.size.height;
       const topLeft = new Point(this.pt.x, this.pt.y);
       const bottomRight = new Point(this.pt.x + this.size.width, this.pt.y + this.size.height);
-      const offset = this.slider.nativeElement.getBoundingClientRect();
+      const offset = this.controlSvg.getBoundingClientRect();
       const matrixStart = element.getScreenCTM();
       const point90 = new Point(this.pt.x + this.size.height + this.size.height * this.size.height / this.size.width, this.pt.y);
       const point90Transform = this.getPointAfterTransform(matrixStart, point90.x, point90.y);
@@ -117,7 +111,7 @@ export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
     const mouseRotate = downRotate.pipe(flatMap((md: MouseEvent) => {
       const objWidth = this.size.width;
       const objHeight = this.size.height;
-      const offset = this.slider.nativeElement.getBoundingClientRect();
+      const offset = this.controlSvg.getBoundingClientRect();
       const startAngle = this.angle;
       const startPoint = new Point(md.clientX - offset.left, md.clientY - offset.top);
       return moveParent.pipe(map((mm: MouseEvent) => {
@@ -156,7 +150,6 @@ export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
     mouseRotate
       .subscribe((pos) => {
         this.angle = pos.angle;
-        this.rotate = 'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') ';
       });
 
     mouseResize
@@ -164,7 +157,6 @@ export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
         if (pos.width !== 0) {
           this.size.width = pos.width;
           this.size.height = pos.height;
-          this.rotate = 'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') ';
         }
       });
 
@@ -172,7 +164,6 @@ export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((pos) => {
         this.pt.x = pos.left;
         this.pt.y = pos.top;
-        this.rotate = 'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') ';
       });
   }
 
@@ -194,10 +185,14 @@ export class SvgControlComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getPointAfterTransform(matrix, x, y) {
-    const offset = this.slider.nativeElement.getBoundingClientRect();
+    const offset = this.controlSvg.getBoundingClientRect();
     return new Point((matrix.a * x) + (matrix.c * y) + matrix.e - offset.left, (matrix.b * x) + (matrix.d * y) + matrix.f - offset.top);
   }
+}
 
+class Size {
+  width: number;
+  height: number;
 }
 
 class Point {
@@ -209,7 +204,3 @@ class Point {
   y: number;
 }
 
-class Size {
-  width: number;
-  height: number;
-}

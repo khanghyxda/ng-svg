@@ -1,0 +1,6 @@
+<div [style.width]="width+'px'" [style.height]="height+'px'" class="svg-wrapper">
+  <svg #control [attr.viewBox]="'0 0 ' + width + ' ' +  height" >
+    <g *ngFor="let item of listObject" app-paint-object controlSvg="controlSvg">
+    </g>
+  </svg>
+</div>

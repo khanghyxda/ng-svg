@@ -3,11 +3,15 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { SvgControlComponent } from './svg-control/svg-control.component';
+import { PaintControlComponent } from './paint-control/paint-control.component';
+import { PaintObjectComponent } from './paint-control/paint-object/paint-object.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SvgControlComponent
+    SvgControlComponent,
+    PaintControlComponent,
+    PaintObjectComponent,
   ],
   imports: [
     BrowserModule

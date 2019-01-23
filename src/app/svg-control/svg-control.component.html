@@ -1,17 +1,17 @@
-<div class="slider" style="height: 200px; width:200px; border: solid 1px #e2e2e2">
+<div class="slider" style="height: 200px; width:200px; border: solid 1px #e2e2e2; margin-left: 200px">
   <svg viewBox="0 0 200 200" #slider>
-    <g [style.transform]="rotate">
+    <g [attr.transform]="rotate">
       <rect #rect [attr.x]="pt.x" [attr.y]="pt.y" [attr.width]="size.width" [attr.height]="size.height" style="fill:blue;fill-opacity:0.1" />
     </g>
-    <g [style.transform]="rotate">
+    <g [attr.transform]="rotate">
       <rect #rectSelect [attr.x]="pt.x" [attr.y]="pt.y" [attr.width]="size.width" [attr.height]="size.height" class="svg_select_points" />
       <circle #topleft r="4" [attr.cx]="pt.x" [attr.cy]="pt.y" stroke="#000000" stroke-width="1" fill="#000000" class="circle-point"></circle>
-      <circle #topright r="4" [attr.cx]="pt.x + size.width" [attr.cy]="pt.y" stroke="#000000" stroke-width="1" fill="#000000"
+      <circle #topright r="4" [attr.cx]="pt.x + size.width" [attr.cy]="pt.y" stroke="#000000" stroke-width="1" fill="#e2e2e2"
         class="circle-point"></circle>
       <circle #bottomleft r="4" [attr.cx]="pt.x" [attr.cy]="pt.y + size.height" stroke="#000000" stroke-width="1" fill="#000000"
         class="circle-point"></circle>
       <circle #bottomright r="4" [attr.cx]="pt.x + size.width" [attr.cy]="pt.y + size.height" stroke="#000000"
-        stroke-width="1" fill="#000000" class="circle-point"></circle>
+        stroke-width="1" fill="red" class="circle-point"></circle>
     </g>
   </svg>
 </div>

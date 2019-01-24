@@ -2,16 +2,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { SvgControlComponent } from './svg-control/svg-control.component';
 import { PaintControlComponent } from './paint-control/paint-control.component';
-import { PaintObjectComponent } from './paint-control/paint-object/paint-object.component';
+import { PaintTextComponent } from './paint-control/paint-text/paint-text.component';
+import { PaintImageComponent } from './paint-control/paint-image/paint-image.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SvgControlComponent,
     PaintControlComponent,
-    PaintObjectComponent,
+    PaintTextComponent,
+    PaintImageComponent,
   ],
   imports: [
     BrowserModule

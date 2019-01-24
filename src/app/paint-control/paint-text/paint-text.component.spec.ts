@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaintObjectComponent } from './paint-object.component';
+import { PaintTextComponent } from './paint-text.component';
 
-describe('PaintObjectComponent', () => {
-  let component: PaintObjectComponent;
-  let fixture: ComponentFixture<PaintObjectComponent>;
+describe('PaintTextComponent', () => {
+  let component: PaintTextComponent;
+  let fixture: ComponentFixture<PaintTextComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PaintObjectComponent ]
+      declarations: [ PaintTextComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PaintObjectComponent);
+    fixture = TestBed.createComponent(PaintTextComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SvgControlComponent } from './svg-control.component';
+import { PaintImageComponent } from './paint-image.component';
 
-describe('SvgControlComponent', () => {
-  let component: SvgControlComponent;
-  let fixture: ComponentFixture<SvgControlComponent>;
+describe('PaintImageComponent', () => {
+  let component: PaintImageComponent;
+  let fixture: ComponentFixture<PaintImageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SvgControlComponent ]
+      declarations: [ PaintImageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SvgControlComponent);
+    fixture = TestBed.createComponent(PaintImageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

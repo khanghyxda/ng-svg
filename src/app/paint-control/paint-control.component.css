@@ -1,3 +1,27 @@
 .svg-wrapper {
     border: solid 1px #e2e2e2;
 }
+
+:host::ng-deep .svg_select_points {
+    stroke-width: 0.5;
+    fill: gray;
+    stroke-dasharray: 10 10;
+    stroke: gray;
+    stroke-opacity: 1;
+    fill-opacity: .1;
+    pointer-events: none;
+}
+
+:host::ng-deep .svg_select_points {
+    fill: #fff;
+    stroke-dasharray: 3 3;
+    background: transparent;
+}
+
+:host::ng-deep .pointer {
+    cursor: pointer;
+}
+
+:host::ng-deep .hidden {
+    opacity: 0;
+}

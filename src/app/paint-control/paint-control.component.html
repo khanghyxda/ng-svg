@@ -1,8 +1,13 @@
 <div [style.width]="width+'px'" [style.height]="height+'px'" class="svg-wrapper">
-  <svg #control [attr.viewBox]="'0 0 ' + width + ' ' +  height" >
+  <svg #control [attr.viewBox]="'0 0 ' + width + ' ' +  height" id="svg-control" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns="http://www.w3.org/2000/svg">
     <g *ngFor="let item of listObject">
       <g *ngIf="item.type==0" app-paint-text [objectInfo]="item"></g>
       <g *ngIf="item.type==1" app-paint-image [objectInfo]="item"></g>
     </g>
   </svg>
+</div>
+<div>
+  <button (click)="svgToBase64()">ToBase64</button>
+  <img [src]="imageUrl">
 </div>

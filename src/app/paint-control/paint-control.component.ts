@@ -3,6 +3,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '
 import { PaintObjectType } from './common.util';
 import { fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
   @ViewChild('control') control: ElementRef;
   @Input('width') width: number;
   @Input('height') height: number;
+  imageUrl;
 
   listObject = [
     { type: PaintObjectType.image, link: 'https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png', selected: false },
@@ -23,7 +25,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     // { type: PaintObjectType.text, text: 'SVG TEST' },
   ];
 
-  constructor(private paintService: PaintService) {
+  constructor(private paintService: PaintService, private sanitizer: DomSanitizer) {
     this.paintService.removeSelectedAnnounced$.subscribe(() => {
       this.removeSelected();
     });
@@ -45,6 +47,13 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     this.listObject.forEach(element => {
       element.selected = false;
     });
+  }
+
+  svgToBase64() {
+    const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(url);
   }
 
 }

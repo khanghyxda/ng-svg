@@ -51,7 +51,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
     const down = fromEvent(element, 'mousedown')
       .pipe(tap((md: MouseEvent) => { md.preventDefault(); md.stopPropagation(); }));
 
-    const mousedrag = down.pipe(flatMap((md: MouseEvent) => {
+    const mouseDrag = down.pipe(flatMap((md: MouseEvent) => {
       const objX = this.pt.x;
       const objY = this.pt.y;
       const startX = md.clientX, startY = md.clientY;
@@ -65,7 +65,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
     }));
 
     const downResize = fromEvent(this.bottomright.nativeElement, 'mousedown')
-      .pipe(tap((md: MouseEvent) => md.preventDefault()));
+      .pipe(tap((md: MouseEvent) => { md.preventDefault(); md.stopPropagation(); }));
     const mouseResize = downResize.pipe(flatMap((md: MouseEvent) => {
       const objWidth = this.size.width;
       const objHeight = this.size.height;
@@ -90,7 +90,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
         }
         const width = ratio * objWidth;
         const height = ratio * objHeight;
-        if (width > 10 && height > 10) {
+        if (width > 20 && height > 20) {
           return {
             width: width,
             height: height
@@ -105,7 +105,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
     }));
 
     const downRotate = fromEvent(this.topright.nativeElement, 'mousedown')
-      .pipe(tap((md: MouseEvent) => md.preventDefault()));
+      .pipe(tap((md: MouseEvent) => { md.preventDefault(); md.stopPropagation(); }));
     const mouseRotate = downRotate.pipe(flatMap((md: MouseEvent) => {
       const objWidth = this.size.width;
       const objHeight = this.size.height;
@@ -143,21 +143,27 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
 
     mouseRotate
       .subscribe((pos) => {
-        this.angle = pos.angle;
+        if (this.objectInfo.selected) {
+          this.angle = pos.angle;
+        }
       });
 
     mouseResize
       .subscribe((pos) => {
-        if (pos.width !== 0) {
-          this.size.width = pos.width;
-          this.size.height = pos.height;
+        if (this.objectInfo.selected) {
+          if (pos.width !== 0) {
+            this.size.width = pos.width;
+            this.size.height = pos.height;
+          }
         }
       });
 
-    mousedrag
+    mouseDrag
       .subscribe((pos) => {
-        this.pt.x = pos.left;
-        this.pt.y = pos.top;
+        if (this.objectInfo.selected) {
+          this.pt.x = pos.left;
+          this.pt.y = pos.top;
+        }
       });
   }
 

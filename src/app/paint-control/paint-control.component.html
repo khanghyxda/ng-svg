@@ -8,7 +8,7 @@
   </svg>
 </div>
 <div>
-  <input type="file" (change)="onFileChanged($event)" #fileInput>
+  <input type="file" (click)="clickChooseFile($event)" (change)="onFileChanged($event)" #fileInput [hidden]="true">
   <button (click)="fileInput.click()">AddImage</button>
   <button (click)="svgToBase64()">ToBase64</button>
   <img [src]='imageBlobUrl | safeUrl' #image *ngIf="imageBlobUrl!=null" />

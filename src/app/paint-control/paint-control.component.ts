@@ -53,6 +53,10 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     });
   }
 
+  clickChooseFile(event) {
+    event.target.value = '';
+  }
+
   onFileChanged(event) {
     const file = event.target.files[0];
     if (file != null) {

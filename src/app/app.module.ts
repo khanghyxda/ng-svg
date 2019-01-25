@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AppComponent, SafeUrlPipe } from './app.component';
 import { PaintControlComponent } from './paint-control/paint-control.component';
 import { PaintTextComponent } from './paint-control/paint-text/paint-text.component';
 import { PaintImageComponent } from './paint-control/paint-image/paint-image.component';
@@ -12,9 +13,12 @@ import { PaintImageComponent } from './paint-control/paint-image/paint-image.com
     PaintControlComponent,
     PaintTextComponent,
     PaintImageComponent,
+    SafeUrlPipe
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

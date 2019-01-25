@@ -1,5 +1,5 @@
 <svg:g #main [attr.transform]="'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') '">
-  <svg:image [attr.xlink:href]="objectInfo.link" #image [attr.x]="pt.x" [attr.y]="pt.y" [attr.width]="size.width"
+  <svg:image [attr.xlink:href]="objectInfo.base64" #image [attr.x]="pt.x" [attr.y]="pt.y" [attr.width]="size.width"
     [attr.height]="size.height" />
 </svg:g>
 <svg:g [style.opacity]="objectInfo.selected ? '1.0' : '0.0'" class="pointer" #select [attr.transform]="'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') '">

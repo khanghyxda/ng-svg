@@ -4,6 +4,7 @@ import { PaintObjectType } from './common.util';
 import { fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -15,25 +16,27 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class PaintControlComponent implements OnInit, AfterViewInit {
 
   @ViewChild('control') control: ElementRef;
+  @ViewChild('image') image: ElementRef;
+  @ViewChild('canvas') canvas: ElementRef;
+  public context: CanvasRenderingContext2D;
   @Input('width') width: number;
   @Input('height') height: number;
-  imageUrl;
+  imageToShow: any;
+  imageBlobUrl: any;
 
   listObject = [
-    { type: PaintObjectType.image, link: 'https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png', selected: false },
-    { type: PaintObjectType.image, link: 'https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png', selected: false },
-    // { type: PaintObjectType.text, text: 'SVG TEST' },
   ];
 
-  constructor(private paintService: PaintService, private sanitizer: DomSanitizer) {
+  constructor(private paintService: PaintService, private sanitizer: DomSanitizer, private httpClient: HttpClient) {
     this.paintService.removeSelectedAnnounced$.subscribe(() => {
       this.removeSelected();
     });
   }
 
   ngOnInit() {
-
   }
+
+
 
   ngAfterViewInit(): void {
     const down = fromEvent(document, 'mousedown')
@@ -41,6 +44,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     down.subscribe((md) => {
       this.removeSelected();
     });
+    this.context = (<HTMLCanvasElement>this.canvas.nativeElement).getContext('2d');
   }
 
   removeSelected() {
@@ -49,11 +53,23 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     });
   }
 
+  onFileChanged(event) {
+    const file = event.target.files[0];
+    if (file != null) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = (e) => {
+        this.listObject.push({ type: PaintObjectType.image, base64: reader.result, selected: false });
+      };
+    }
+  }
+
   svgToBase64() {
     const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
     const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const base64 = 'data:image/svg+xml;utf8,' + svg;
     const url = URL.createObjectURL(blob);
-    this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+    this.imageBlobUrl = url;
   }
 
 }

@@ -17,10 +17,15 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
 
   @ViewChild('control') control: ElementRef;
   @ViewChild('image') image: ElementRef;
+  @ViewChild('imageBg') imageBg: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
   public context: CanvasRenderingContext2D;
   @Input('width') width: number;
   @Input('height') height: number;
+  @Input('startX') startX: number;
+  @Input('startY') startY: number;
+  @Input('sizeX') sizeX: number;
+  @Input('sizeY') sizeY: number;
   imageToShow: any;
   imageBlobUrl: any;
 
@@ -70,10 +75,27 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
 
   svgToBase64() {
     const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
-    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
     const base64 = 'data:image/svg+xml;utf8,' + svg;
     const url = URL.createObjectURL(blob);
     this.imageBlobUrl = url;
+  }
+
+  svgToPng() {
+    // console.log(JSON.stringify(this.listObject));
+    const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
+    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    this.imageBlobUrl = url;
+    setTimeout(() => {
+      this.context.clearRect(0, 0, this.width, this.height);
+      this.context.fillStyle = '#fff';
+      this.context.fillRect(0, 0, this.width, this.height);
+      this.context.drawImage(this.imageBg.nativeElement, 0, 0, this.width, this.height);
+      this.context.drawImage(this.image.nativeElement, this.startX, this.startY, this.sizeX, this.sizeY);
+      const imgURI = this.canvas.nativeElement.toDataURL('image/png');
+      console.log(imgURI);
+    }, 200);
   }
 
 }

@@ -1,16 +1,23 @@
-<div [style.width]="width+'px'" [style.height]="height+'px'" class="svg-wrapper">
-  <svg #control [attr.viewBox]="'0 0 ' + width + ' ' +  height" id="svg-control" xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns="http://www.w3.org/2000/svg">
-    <g *ngFor="let item of listObject">
-      <g *ngIf="item.type==0" app-paint-text [objectInfo]="item"></g>
-      <g *ngIf="item.type==1" app-paint-image [objectInfo]="item"></g>
-    </g>
-  </svg>
-</div>
 <div>
   <input type="file" (click)="clickChooseFile($event)" (change)="onFileChanged($event)" #fileInput [hidden]="true">
   <button (click)="fileInput.click()">AddImage</button>
   <button (click)="svgToBase64()">ToBase64</button>
-  <img [src]='imageBlobUrl | safeUrl' #image *ngIf="imageBlobUrl!=null" />
+  <button (click)="svgToPng()">ToPng</button>
+  <img [src]='imageBlobUrl | safeUrl' #image *ngIf="imageBlobUrl!=null" [hidden]="true" />
 </div>
-<canvas #canvas></canvas>
+<div class="design-wrapper" [style.width]="width" [style.height]="height">
+  <img class="image-bg" #imageBg src="/assets/template.png" [width]="width" [height]="height" />
+  <div [style.width]="sizeX+'px'" [style.height]="sizeY+'px'" class="svg-wrapper" [style.top]="startY+'px'"
+    [style.left]="startX+'px'">
+    <svg #control [attr.viewBox]="'0 0 ' + sizeX + ' ' +  sizeY" id="svg-control" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns="http://www.w3.org/2000/svg">
+      <g *ngFor="let item of listObject">
+        <g *ngIf="item.type==0" app-paint-text [objectInfo]="item"></g>
+        <g *ngIf="item.type==1" app-paint-image [objectInfo]="item"></g>
+      </g>
+    </svg>
+  </div>
+</div>
+<div style="margin-top: 400px">
+  <canvas #canvas [width]="width" [height]="height"></canvas>
+</div>

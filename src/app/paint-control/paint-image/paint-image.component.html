@@ -1,13 +1,13 @@
-<svg:g #main [attr.transform]="'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') '">
-  <svg:image [attr.xlink:href]="objectInfo.base64" #image [attr.x]="pt.x" [attr.y]="pt.y" [attr.width]="size.width"
-    [attr.height]="size.height" />
+<svg:g #main [attr.transform]="'rotate(' + objectInfo.angle + ' ' + (objectInfo.pt.x + objectInfo.size.width / 2) + ' ' + (objectInfo.pt.y + objectInfo.size.height / 2) + ') '">
+  <svg:image [attr.xlink:href]="objectInfo.base64" #image [attr.x]="objectInfo.pt.x" [attr.y]="objectInfo.pt.y" [attr.width]="objectInfo.size.width"
+    [attr.height]="objectInfo.size.height" />
 </svg:g>
-<svg:g [style.opacity]="objectInfo.selected ? '1.0' : '0.0'" class="pointer" #select [attr.transform]="'rotate(' + this.angle + ' ' + (this.pt.x + this.size.width / 2) + ' ' + (this.pt.y + this.size.height / 2) + ') '">
-  <svg:rect #rectSelect [attr.x]="pt.x" [attr.y]="pt.y" [attr.width]="size.width" [attr.height]="size.height" class="svg_select_points" />
-  <svg:image #topleft xlink:href="./assets/icon/delete.svg" [attr.x]="pt.x - rIcon" [attr.y]="pt.y - rIcon"
+<svg:g [style.opacity]="objectInfo.selected ? '1.0' : '0.0'" class="pointer" #select [attr.transform]="'rotate(' + objectInfo.angle + ' ' + (objectInfo.pt.x + objectInfo.size.width / 2) + ' ' + (objectInfo.pt.y + objectInfo.size.height / 2) + ') '">
+  <svg:rect #rectSelect [attr.x]="objectInfo.pt.x" [attr.y]="objectInfo.pt.y" [attr.width]="objectInfo.size.width" [attr.height]="objectInfo.size.height" class="svg_select_points" />
+  <svg:image #topleft xlink:href="./assets/icon/delete.svg" [attr.x]="objectInfo.pt.x - rIcon" [attr.y]="objectInfo.pt.y - rIcon"
     [attr.width]="rIcon * 2" [attr.height]="rIcon * 2" />
-  <svg:image #topright xlink:href="./assets/icon/rotate.svg" [attr.x]="pt.x + size.width - rIcon" [attr.y]="pt.y - rIcon"
+  <svg:image #topright xlink:href="./assets/icon/rotate.svg" [attr.x]="objectInfo.pt.x + objectInfo.size.width - rIcon" [attr.y]="objectInfo.pt.y - rIcon"
     [attr.width]="rIcon * 2" [attr.height]="rIcon * 2" />
-  <svg:image #bottomright xlink:href="./assets/icon/resize.svg" [attr.x]="pt.x + size.width - rIcon" [attr.y]="pt.y + size.height - rIcon"
+  <svg:image #bottomright xlink:href="./assets/icon/resize.svg" [attr.x]="objectInfo.pt.x + objectInfo.size.width - rIcon" [attr.y]="objectInfo.pt.y + objectInfo.size.height - rIcon"
     [attr.width]="rIcon * 2" [attr.height]="rIcon * 2" clip-path="url(#rectBottomRight)" fill="red"/>
 </svg:g>

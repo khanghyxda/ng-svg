@@ -4,7 +4,8 @@ import { PaintObjectType } from './common.util';
 import { fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
+import { RequestOptions, Headers } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -70,6 +71,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
       reader.onloadend = (e) => {
         this.listObject.push({ type: PaintObjectType.image, base64: reader.result, selected: false });
       };
+
     }
   }
 
@@ -85,6 +87,20 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     // console.log(JSON.stringify(this.listObject));
     const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
     const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+
+    const formData: FormData = new FormData();
+    formData.append('file.name', blob);
+    const headers = new HttpHeaders();
+    headers.append('Accept', 'application/json');
+    this.httpClient.post('http://localhost:7001/design/upload/', formData, { headers: headers })
+      .subscribe(r => console.log(r));
+
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = (e) => {
+      // Base64 SVG
+      console.log(reader.result);
+    };
     const url = URL.createObjectURL(blob);
     this.imageBlobUrl = url;
     setTimeout(() => {

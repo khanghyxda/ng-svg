@@ -148,7 +148,7 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
       .subscribe((pos) => {
         if (this.objectInfo.selected) {
           const rotateMatrix = this.getMatrixRotate(pos.angle, pos.center.x, pos.center.y);
-          const afterMatrix = this.currentMatrix.multiply(rotateMatrix);
+          const afterMatrix = this.currentMatrix.translate(-1 * pos.center.x, -1 * pos.center.y);
           this.setMatrix(afterMatrix);
         }
       });
@@ -171,7 +171,9 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     this.objectInfo.f = matrix.f;
   }
 
-  getMatrixRotate(a, x, y) {
+  getMatrixRotate(angle, x, y) {
+    console.log(angle);
+    const a = angle * Math.PI / 180;
     const matrix = this.controlSvg.createSVGMatrix();
     matrix.a = Math.cos(a);
     matrix.b = Math.sin(a);

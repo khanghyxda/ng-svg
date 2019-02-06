@@ -84,9 +84,10 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
       const startPoint = new Point(md.clientX - offset.left, md.clientY - offset.top);
       return moveParent.pipe(map((mm: MouseEvent) => {
         mm.preventDefault();
+        console.log(point90Transform);
         const endPoint = new Point(mm.clientX - offset.left, mm.clientY - offset.top);
-        const sideOfLine = getSideOfLine(point90Transform, startPoint, endPoint);
-        const angle = calcAngle(topLeftTransform, startPoint, endPoint);
+        const sideOfLine = getSideOfLine(point90Transform, bottomRightTransform, endPoint);
+        const angle = calcAngle(topLeftTransform, bottomRightTransform, endPoint);
         const projetion = Math.abs(Math.cos(angle * Math.PI / 180) * calcSide(startPoint, endPoint));
         const diagonal = calcSide(topLeftTransform, bottomRightTransform);
         let ratio = 1 + projetion / diagonal;
@@ -104,6 +105,7 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     const mouseRotate = downRotate.pipe(flatMap((md: MouseEvent) => {
       this.currentMatrix = this.getCurrentMatrix();
       const bbox = element.getBBox();
+      const topLeftTransform = this.getPointAfter(this.getPoint(bbox.x, bbox.y), this.currentMatrix);
       const centerTransform = this.getPointAfter(this.getPoint(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2), this.currentMatrix);
       const offset = this.controlSvg.getBoundingClientRect();
       const startAngle = this.objectInfo.angle;
@@ -112,12 +114,22 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
         const endPoint = new Point(mm.clientX - offset.left, mm.clientY - offset.top);
         const changeAngle = calcAngle(startPoint, centerTransform, endPoint);
         const sideOfLine = getSideOfLine(startPoint, centerTransform, endPoint);
-        const vector = { x: endPoint.x - startPoint.x, y: endPoint.y - startPoint.y };
+        const vector = { x: centerTransform.x - topLeftTransform.x, y: centerTransform.y - topLeftTransform.y };
+        console.log(topLeftTransform);
+        console.log(centerTransform);
+        console.log(vector);
         console.log(changeAngle);
+        if (sideOfLine < 0) {
+          return {
+            angle:
+              -1 * changeAngle,
+            vector: vector
+          };
+        }
         return {
           angle:
             changeAngle,
-          center: centerTransform
+          vector: vector
         };
       }), takeUntil(mouseup));
     }));
@@ -147,9 +159,9 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     mouseRotate
       .subscribe((pos) => {
         if (this.objectInfo.selected) {
-          const rotateMatrix = this.getMatrixRotate(pos.angle, pos.center.x, pos.center.y);
-          const afterMatrix = this.currentMatrix.translate(-1 * pos.center.x, -1 * pos.center.y);
-          this.setMatrix(afterMatrix);
+          console.log(pos);
+          const rotateMatrix = this.getMatrixRotate(pos.angle, pos.vector.x, pos.vector.y);
+          this.setMatrix(this.currentMatrix.rotateFromVector(3, -20));
         }
       });
   }
@@ -171,8 +183,18 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     this.objectInfo.f = matrix.f;
   }
 
+  getTranslateMatrix(matrix, cx, cy) {
+    const matrixReturn = this.controlSvg.createSVGMatrix();
+    matrixReturn.a = matrix.a;
+    matrixReturn.b = matrix.b;
+    matrixReturn.c = matrix.c;
+    matrixReturn.d = matrix.d;
+    matrixReturn.e = matrix.e + cx;
+    matrixReturn.f = matrix.f + cy;
+    return matrixReturn;
+  }
+
   getMatrixRotate(angle, x, y) {
-    console.log(angle);
     const a = angle * Math.PI / 180;
     const matrix = this.controlSvg.createSVGMatrix();
     matrix.a = Math.cos(a);

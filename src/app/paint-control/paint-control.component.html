@@ -1,3 +1,4 @@
+<div style='margin-top: 50px'></div>
 <div>
   <input type="file" (click)="clickChooseFile($event)" (change)="onFileChanged($event)" #fileInput [hidden]="true">
   <button (click)="fileInput.click()">AddImage</button>
@@ -10,7 +11,7 @@
   <div [style.width]="sizeX+'px'" [style.height]="sizeY+'px'" class="svg-wrapper" [style.top]="startY+'px'"
     [style.left]="startX+'px'">
     <svg #control [attr.viewBox]="'0 0 ' + sizeX + ' ' +  sizeY" id="svg-control" xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns="http://www.w3.org/2000/svg">
+      [style.width]="sizeX" [style.height]="sizeY" xmlns="http://www.w3.org/2000/svg">
       <g *ngFor="let item of listObject">
         <g *ngIf="item.type==0" app-paint-text [objectInfo]="item"></g>
         <g *ngIf="item.type==1" app-paint-image [objectInfo]="item"></g>

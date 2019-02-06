@@ -4,8 +4,8 @@ import { PaintObjectType } from './common.util';
 import { fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
-import { RequestOptions, Headers } from '@angular/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -31,6 +31,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
   imageBlobUrl: any;
 
   listObject = [
+    { type: PaintObjectType.text, text: 'TEST', base64: null, selected: false }
   ];
 
   constructor(private paintService: PaintService, private sanitizer: DomSanitizer, private httpClient: HttpClient) {
@@ -46,7 +47,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     const down = fromEvent(document, 'mousedown')
-      .pipe(tap((md: MouseEvent) => md.preventDefault()));
+      .pipe();
     down.subscribe((md) => {
       this.removeSelected();
     });
@@ -69,7 +70,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = (e) => {
-        this.listObject.push({ type: PaintObjectType.image, base64: reader.result, selected: false });
+        this.listObject.push({ type: PaintObjectType.image, text: null, base64: reader.result, selected: false });
       };
 
     }
@@ -109,8 +110,11 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
       this.context.fillRect(0, 0, this.width, this.height);
       this.context.drawImage(this.imageBg.nativeElement, 0, 0, this.width, this.height);
       this.context.drawImage(this.image.nativeElement, this.startX, this.startY, this.sizeX, this.sizeY);
-      const imgURI = this.canvas.nativeElement.toDataURL('image/png');
-      console.log(imgURI);
+      this.canvas.nativeElement.toBlob((b) => {
+        console.log(b);
+      }, 'image/png', 0.95);
+      // const imgURI = this.canvas.nativeElement.toDataURL('image/png');
+      // console.log(imgURI);
     }, 200);
   }
 

@@ -1,4 +1,4 @@
-export function calcAngle(pointA: Point, pointB: Point, pointC: Point) {
+export function calcAngle(pointA, pointB, pointC) {
     const a = calcSide(pointA, pointC);
     const b = calcSide(pointB, pointA);
     const c = calcSide(pointC, pointB);
@@ -6,16 +6,16 @@ export function calcAngle(pointA: Point, pointB: Point, pointC: Point) {
     return Math.acos(cosa) * (180 / Math.PI);
 }
 
-export function calcSide(pointA: Point, pointB: Point) {
+export function calcSide(pointA, pointB) {
     return Math.sqrt((pointA.x - pointB.x) * (pointA.x - pointB.x) + (pointA.y - pointB.y) * (pointA.y - pointB.y));
 }
 
-export function getSideOfLine(pointA: Point, pointB: Point, pointCheck: Point) {
+export function getSideOfLine(pointA, pointB, pointCheck) {
     const d = (pointCheck.x - pointA.x) * (pointB.y - pointA.y) - (pointCheck.y - pointA.y) * (pointB.x - pointA.x);
     return d;
 }
 
-export function getPointAfterTransform(svg, matrix, point: Point) {
+export function getPointAfterTransform(svg, matrix, point) {
     const offset = svg.getBoundingClientRect();
     return new Point((matrix.a * point.x) + (matrix.c * point.y) + matrix.e - offset.left,
         (matrix.b * point.x) + (matrix.d * point.y) + matrix.f - offset.top);

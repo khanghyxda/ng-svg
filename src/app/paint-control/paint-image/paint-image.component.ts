@@ -1,10 +1,8 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { tap, takeUntil, flatMap, map, } from 'rxjs/operators';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide, Size } from '../common.util';
 import { PaintService } from '../paint.service';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   /* tslint:disable-next-line */
@@ -23,7 +21,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
   controlSvg;
   rIcon = 12;
 
-  constructor(private paintService: PaintService, private httpClient: HttpClient) {
+  constructor(private paintService: PaintService) {
   }
 
   ngOnInit() {

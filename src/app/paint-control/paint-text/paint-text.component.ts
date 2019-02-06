@@ -161,7 +161,7 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
         if (this.objectInfo.selected) {
           console.log(pos);
           const rotateMatrix = this.getMatrixRotate(pos.angle, pos.vector.x, pos.vector.y);
-          this.setMatrix(this.currentMatrix.rotateFromVector(3, -20));
+          this.setMatrix(this.currentMatrix.rotate(pos.angle));
         }
       });
   }

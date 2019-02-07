@@ -3,7 +3,7 @@
   <input type="file" (click)="clickChooseFile($event)" (change)="onFileChanged($event)" #fileInput [hidden]="true">
   <button (click)="fileInput.click()">AddImage</button>
   <button (click)="addText()">AddText</button>
-  <button (click)="submit()">Submit</button>
+  <button (click)="designComplete()">Submit</button>
   <button (click)="saveObj()">SaveObj</button>
   <img [src]='imageBlobUrl | safeUrl' #image *ngIf="imageBlobUrl!=null" [hidden]="true" />
 </div>

@@ -24,6 +24,9 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
     paintService.designAnnounced$.subscribe(() => {
       this.design();
     });
+    paintService.designCompleteAnnounced$.subscribe(() => {
+      this.designComplete();
+    });
   }
 
   ngOnInit() {
@@ -60,6 +63,10 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
   }
 
   design() {
+
+  }
+
+  designComplete() {
 
   }
 

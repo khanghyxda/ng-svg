@@ -101,8 +101,8 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     localStorage.setItem('listObject', JSON.stringify(this.listObject));
   }
 
-  submit() {
-
+  designComplete() {
+    this.paintService.designComplete();
   }
 
 }

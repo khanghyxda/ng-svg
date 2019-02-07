@@ -10,11 +10,15 @@ export class PaintService {
   private previewAnnouncedSource = new Subject();
   private designAnnouncedSource = new Subject();
   private cleanListAnnouncedSource = new Subject();
+  private designCompleteAnnouncedSource = new Subject();
+  private sendImageAnnouncedSource = new Subject<IImage>();
 
   removeSelectedAnnounced$ = this.removeSelectedAnnouncedSource.asObservable();
   previewAnnounced$ = this.previewAnnouncedSource.asObservable();
   designAnnounced$ = this.previewAnnouncedSource.asObservable();
   cleanListAnnounced$ = this.cleanListAnnouncedSource.asObservable();
+  designCompleteAnnounced$ = this.designCompleteAnnouncedSource.asObservable();
+  sendImageAnnounced$ = this.sendImageAnnouncedSource.asObservable();
 
   removeSelected() {
     this.removeSelectedAnnouncedSource.next();
@@ -32,5 +36,25 @@ export class PaintService {
     this.cleanListAnnouncedSource.next();
   }
 
-  constructor() { }
+  designComplete() {
+    this.designCompleteAnnouncedSource.next();
+  }
+
+  sendImage(image: IImage) {
+    this.sendImageAnnouncedSource.next(image);
+  }
+
+  constructor() {
+
+  }
+}
+
+export class IImage {
+
+  public svgImage;
+
+  public pngImage;
+
+  public isFront;
+
 }

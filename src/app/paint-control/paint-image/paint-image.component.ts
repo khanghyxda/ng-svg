@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { tap, takeUntil, flatMap, map, } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
-import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide, Size } from '../common.util';
+import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide } from '../common.util';
 import { PaintService } from '../paint.service';
 
 @Component({
@@ -27,12 +27,12 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.controlSvg = this.main.nativeElement.parentNode.parentNode.parentNode;
     if (this.objectInfo.size === undefined) {
-      this.objectInfo.size = new Size();
+      this.objectInfo.size = {};
       this.objectInfo.size.width = 50;
       this.objectInfo.size.height = 70;
     }
     if (this.objectInfo.pt === undefined) {
-      this.objectInfo.pt = this.controlSvg.createSVGPoint();
+      this.objectInfo.pt = {};
       this.objectInfo.pt.x = 50;
       this.objectInfo.pt.y = 50;
     }
@@ -171,5 +171,4 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
         }
       });
   }
-
 }

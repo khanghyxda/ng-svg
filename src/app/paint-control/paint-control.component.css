@@ -21,12 +21,6 @@
     pointer-events: none;
 }
 
-:host::ng-deep .svg_select_points {
-    fill: #fff;
-    stroke-dasharray: 3 3;
-    background: transparent;
-}
-
 :host::ng-deep .pointer {
     cursor: pointer;
 }

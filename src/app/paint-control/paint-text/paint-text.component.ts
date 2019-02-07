@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { tap, takeUntil, flatMap, map, } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
-import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide, Size } from '../common.util';
+import { getSideOfLine, calcAngle, calcSide, Point } from '../common.util';
 import { PaintService } from '../paint.service';
 @Component({
   /* tslint:disable-next-line */
@@ -29,7 +29,7 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     this.controlSvg = this.main.nativeElement.parentNode.parentNode.parentNode;
     const element = this.text.nativeElement;
     if (this.objectInfo.width === undefined) {
-      const bbox = this.text.nativeElement.getBBox();
+      const bbox = element.getBBox();
       this.objectInfo.width = bbox.width;
       this.objectInfo.a = 1;
       this.objectInfo.b = 0;
@@ -84,7 +84,6 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
       const startPoint = new Point(md.clientX - offset.left, md.clientY - offset.top);
       return moveParent.pipe(map((mm: MouseEvent) => {
         mm.preventDefault();
-        console.log(point90Transform);
         const endPoint = new Point(mm.clientX - offset.left, mm.clientY - offset.top);
         const sideOfLine = getSideOfLine(point90Transform, bottomRightTransform, endPoint);
         const angle = calcAngle(topLeftTransform, bottomRightTransform, endPoint);
@@ -106,30 +105,23 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
       this.currentMatrix = this.getCurrentMatrix();
       const bbox = element.getBBox();
       const topLeftTransform = this.getPointAfter(this.getPoint(bbox.x, bbox.y), this.currentMatrix);
+      const topRightTransform = this.getPointAfter(this.getPoint(bbox.x + bbox.width, bbox.y), this.currentMatrix);
       const centerTransform = this.getPointAfter(this.getPoint(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2), this.currentMatrix);
       const offset = this.controlSvg.getBoundingClientRect();
-      const startAngle = this.objectInfo.angle;
-      const startPoint = new Point(md.clientX - offset.left, md.clientY - offset.top);
       return moveParent.pipe(map((mm: MouseEvent) => {
-        const endPoint = new Point(mm.clientX - offset.left, mm.clientY - offset.top);
-        const changeAngle = calcAngle(startPoint, centerTransform, endPoint);
-        const sideOfLine = getSideOfLine(startPoint, centerTransform, endPoint);
+        const endPoint = this.getPoint(mm.clientX - offset.left, mm.clientY - offset.top);
+        const changeAngle = calcAngle(topRightTransform, topLeftTransform, endPoint);
+        const sideOfLine = getSideOfLine(topRightTransform, topLeftTransform, endPoint);
         const vector = { x: centerTransform.x - topLeftTransform.x, y: centerTransform.y - topLeftTransform.y };
-        console.log(topLeftTransform);
-        console.log(centerTransform);
-        console.log(vector);
-        console.log(changeAngle);
         if (sideOfLine < 0) {
           return {
             angle:
               -1 * changeAngle,
-            vector: vector
           };
         }
         return {
           angle:
             changeAngle,
-          vector: vector
         };
       }), takeUntil(mouseup));
     }));
@@ -159,9 +151,7 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     mouseRotate
       .subscribe((pos) => {
         if (this.objectInfo.selected) {
-          console.log(pos);
-          const rotateMatrix = this.getMatrixRotate(pos.angle, pos.vector.x, pos.vector.y);
-          this.setMatrix(this.currentMatrix.rotate(pos.angle));
+          this.setMatrix(this.currentMatrix.scale(0.01).rotate(pos.angle).scale(100));
         }
       });
   }

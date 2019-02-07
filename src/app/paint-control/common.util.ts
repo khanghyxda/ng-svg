@@ -21,11 +21,6 @@ export function getPointAfterTransform(svg, matrix, point) {
         (matrix.b * point.x) + (matrix.d * point.y) + matrix.f - offset.top);
 }
 
-export class Size {
-    width: number;
-    height: number;
-}
-
 export class Point {
     constructor(x, y) {
         this.x = x;

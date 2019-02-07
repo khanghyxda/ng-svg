@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { tap, takeUntil, flatMap, map, } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
-import { getSideOfLine, calcAngle, calcSide, Point } from '../common.util';
+import { getSideOfLine, calcAngle, calcSide, Point } from '../paint.util';
 import { PaintService } from '../paint.service';
 @Component({
   /* tslint:disable-next-line */

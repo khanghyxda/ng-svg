@@ -1,6 +1,6 @@
 import { PaintService } from './paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { PaintObjectType, getTemplate } from './common.util';
+import { PaintObjectType, getTemplate } from './paint.util';
 import { fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -28,12 +28,16 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     this.paintService.removeSelectedAnnounced$.subscribe(() => {
       this.removeSelected();
     });
+    this.paintService.cleanListAnnounced$.subscribe(() => {
+      this.listObject = [];
+      this.saveObj();
+    });
     this.template = getTemplate(1);
     this.params.isDesign = true;
   }
 
   ngOnInit() {
-    // this.listObject = JSON.parse(localStorage.getItem('listObject'));
+    this.listObject = JSON.parse(localStorage.getItem('listObject'));
   }
 
   ngAfterViewInit(): void {
@@ -67,13 +71,14 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
       reader.onloadend = (e) => {
         const obj = {
           isFront: this.showFront, type: PaintObjectType.image, text: null,
-          image: <any>{ base64: reader.result }, selected: false
+          image: <any>{}, selected: false
         };
         const image = new Image();
         image.src = URL.createObjectURL(file);
         image.onload = () => {
           obj.image.width = image.width;
           obj.image.height = image.height;
+          obj.image.src = image.src;
           this.listObject.push(obj);
           console.log(obj);
         };
@@ -94,6 +99,10 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
 
   saveObj() {
     localStorage.setItem('listObject', JSON.stringify(this.listObject));
+  }
+
+  submit() {
+
   }
 
 }

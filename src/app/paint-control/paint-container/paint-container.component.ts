@@ -40,12 +40,9 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
   preview() {
     const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
     const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     reader.onloadend = (e) => {
-      // Base64 SVG
-      console.log(reader.result);
       const image = new Image();
       image.src = reader.result.toString();
       setTimeout(() => {
@@ -58,8 +55,6 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
         this.canvas.nativeElement.toBlob((b) => {
           console.log(b);
         }, 'image/png', 2);
-        // const imgURI = this.canvas.nativeElement.toDataURL('image/png');
-        // console.log(imgURI);
       }, 200);
     };
   }

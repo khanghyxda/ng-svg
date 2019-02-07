@@ -9,10 +9,12 @@ export class PaintService {
   private removeSelectedAnnouncedSource = new Subject();
   private previewAnnouncedSource = new Subject();
   private designAnnouncedSource = new Subject();
+  private cleanListAnnouncedSource = new Subject();
 
   removeSelectedAnnounced$ = this.removeSelectedAnnouncedSource.asObservable();
   previewAnnounced$ = this.previewAnnouncedSource.asObservable();
   designAnnounced$ = this.previewAnnouncedSource.asObservable();
+  cleanListAnnounced$ = this.cleanListAnnouncedSource.asObservable();
 
   removeSelected() {
     this.removeSelectedAnnouncedSource.next();
@@ -24,6 +26,10 @@ export class PaintService {
 
   design() {
     this.designAnnouncedSource.next();
+  }
+
+  cleanList() {
+    this.cleanListAnnouncedSource.next();
   }
 
   constructor() { }

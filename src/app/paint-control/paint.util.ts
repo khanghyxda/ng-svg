@@ -30,7 +30,6 @@ export class Point {
     y: number;
 }
 
-
 export enum PaintObjectType {
     text,
     image

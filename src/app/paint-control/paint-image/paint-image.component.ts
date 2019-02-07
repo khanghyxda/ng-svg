@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { tap, takeUntil, flatMap, map, } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
-import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide } from '../common.util';
+import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide } from '../paint.util';
 import { PaintService } from '../paint.service';
 
 @Component({
@@ -20,6 +20,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
 
   controlSvg;
   rIcon = 12;
+  base64: any;
 
   constructor(private paintService: PaintService) {
   }
@@ -39,6 +40,17 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
     if (this.objectInfo.angle === undefined) {
       this.objectInfo.angle = 0;
     }
+    fetch(this.objectInfo.image.src).then((b) => {
+      b.blob().then((blob) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = (e) => {
+          this.base64 = reader.result;
+        };
+      });
+    }).catch((error) => {
+      this.paintService.cleanList();
+    });
   }
 
   ngAfterViewInit(): void {

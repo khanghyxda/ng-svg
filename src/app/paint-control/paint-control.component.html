@@ -2,23 +2,20 @@
 <div>
   <input type="file" (click)="clickChooseFile($event)" (change)="onFileChanged($event)" #fileInput [hidden]="true">
   <button (click)="fileInput.click()">AddImage</button>
-  <button (click)="svgToBase64()">ToBase64</button>
+  <button (click)="addText()">AddText</button>
   <button (click)="svgToPng()">ToPng</button>
+  <button (click)="saveObj()">SaveObj</button>
   <img [src]='imageBlobUrl | safeUrl' #image *ngIf="imageBlobUrl!=null" [hidden]="true" />
 </div>
-<div class="design-wrapper" [style.width]="width" [style.height]="height">
-  <img class="image-bg" #imageBg src="/assets/template.png" [width]="width" [height]="height" />
-  <div [style.width]="sizeX+'px'" [style.height]="sizeY+'px'" class="svg-wrapper" [style.top]="startY+'px'"
-    [style.left]="startX+'px'">
-    <svg #control [attr.viewBox]="'0 0 ' + sizeX + ' ' +  sizeY" id="svg-control" xmlns:xlink="http://www.w3.org/1999/xlink"
-      [style.width]="sizeX" [style.height]="sizeY" xmlns="http://www.w3.org/2000/svg">
-      <g *ngFor="let item of listObject">
-        <g *ngIf="item.type==0" app-paint-text [objectInfo]="item"></g>
-        <g *ngIf="item.type==1" app-paint-image [objectInfo]="item"></g>
-      </g>
-    </svg>
-  </div>
+<div>
+  <button (click)="showFront=true">Front</button>
+  <button (click)="showFront=false">Back</button>
 </div>
-<div style="margin-top: 400px">
-  <canvas #canvas [width]="width" [height]="height"></canvas>
+<div>
+  <button (click)="design()">Design</button>
+  <button (click)="preview()">Preview</button>
+</div>
+<div class="design-container">
+  <app-paint-container [isFront]="true" [params]="params" [template]="template" [listObject]="listObject" [hidden]="!showFront"></app-paint-container>
+  <app-paint-container [isFront]="false" [params]="params" [template]="template" [listObject]="listObject" [hidden]="showFront"></app-paint-container>
 </div>

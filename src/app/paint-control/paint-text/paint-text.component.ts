@@ -45,8 +45,9 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
       const element = this.text.nativeElement;
       const bbox = element.getBBox();
       this.objectInfo.width = bbox.width;
+      console.log(bbox);
       this.drag();
-    }, 100);
+    }, 200);
   }
 
   drag() {

@@ -28,8 +28,8 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
     this.controlSvg = this.main.nativeElement.parentNode.parentNode.parentNode;
     if (this.objectInfo.size === undefined) {
       this.objectInfo.size = {};
-      this.objectInfo.size.width = 50;
-      this.objectInfo.size.height = 70;
+      this.objectInfo.size.width = this.objectInfo.image.width;
+      this.objectInfo.size.height = this.objectInfo.image.height;
     }
     if (this.objectInfo.pt === undefined) {
       this.objectInfo.pt = {};

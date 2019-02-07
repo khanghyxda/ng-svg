@@ -1,15 +1,4 @@
-.design-wrapper {
-    position: relative;
-    height: 100%;
-}
-.image-bg {
-    position: absolute;
-}
 
-.svg-wrapper {
-    border: solid 1px #e2e2e2;
-    position: absolute;
-}
 
 :host::ng-deep .svg_select_points {
     stroke-width: 0.5;

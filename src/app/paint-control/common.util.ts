@@ -35,3 +35,8 @@ export enum PaintObjectType {
     text,
     image
 }
+
+export function getTemplate(id) {
+    const designTemplates: any[] = JSON.parse(localStorage.getItem('designTemplates'));
+    return designTemplates.filter((o) => o.id = id)[0];
+}

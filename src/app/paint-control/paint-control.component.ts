@@ -1,6 +1,6 @@
 import { PaintService } from './paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { PaintObjectType } from './common.util';
+import { PaintObjectType, getTemplate } from './common.util';
 import { fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -16,34 +16,25 @@ import { FormControl } from '@angular/forms';
 })
 export class PaintControlComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('control') control: ElementRef;
-  @ViewChild('image') image: ElementRef;
-  @ViewChild('imageBg') imageBg: ElementRef;
-  @ViewChild('canvas') canvas: ElementRef;
-  public context: CanvasRenderingContext2D;
-  @Input('width') width: number;
-  @Input('height') height: number;
-  @Input('startX') startX: number;
-  @Input('startY') startY: number;
-  @Input('sizeX') sizeX: number;
-  @Input('sizeY') sizeY: number;
-  imageToShow: any;
-  imageBlobUrl: any;
-
+  template = {};
   listObject = [
-    { type: PaintObjectType.text, text: 'TEST', base64: null, selected: false }
+
   ];
+
+  showFront = true;
+  params = <any>{};
 
   constructor(private paintService: PaintService, private sanitizer: DomSanitizer, private httpClient: HttpClient) {
     this.paintService.removeSelectedAnnounced$.subscribe(() => {
       this.removeSelected();
     });
+    this.template = getTemplate(1);
+    this.params.isDesign = true;
   }
 
   ngOnInit() {
+    // this.listObject = JSON.parse(localStorage.getItem('listObject'));
   }
-
-
 
   ngAfterViewInit(): void {
     const down = fromEvent(document, 'mousedown')
@@ -51,7 +42,6 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     down.subscribe((md) => {
       this.removeSelected();
     });
-    this.context = (<HTMLCanvasElement>this.canvas.nativeElement).getContext('2d');
   }
 
   removeSelected() {
@@ -64,58 +54,46 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     event.target.value = '';
   }
 
+  addText() {
+    const obj = { isFront: this.showFront, type: PaintObjectType.text, text: 'TEST', image: null, selected: false };
+    this.listObject.push(obj);
+  }
+
   onFileChanged(event) {
     const file = event.target.files[0];
     if (file != null) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = (e) => {
-        this.listObject.push({ type: PaintObjectType.image, text: null, base64: reader.result, selected: false });
+        const obj = {
+          isFront: this.showFront, type: PaintObjectType.image, text: null,
+          image: <any>{ base64: reader.result }, selected: false
+        };
+        const image = new Image();
+        image.src = URL.createObjectURL(file);
+        image.onload = () => {
+          obj.image.width = image.width;
+          obj.image.height = image.height;
+          this.listObject.push(obj);
+          console.log(obj);
+        };
       };
 
     }
   }
 
-  svgToBase64() {
-    const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
-    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-    const base64 = 'data:image/svg+xml;utf8,' + svg;
-    const url = URL.createObjectURL(blob);
-    this.imageBlobUrl = url;
+  preview() {
+    this.params.isDesign = false;
+    this.paintService.preview();
   }
 
-  svgToPng() {
-    // console.log(JSON.stringify(this.listObject));
-    const svg = new XMLSerializer().serializeToString(this.control.nativeElement);
-    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+  design() {
+    this.params.isDesign = true;
+    this.paintService.design();
+  }
 
-    const formData: FormData = new FormData();
-    formData.append('file.name', blob);
-    const headers = new HttpHeaders();
-    headers.append('Accept', 'application/json');
-    this.httpClient.post('http://localhost:7001/design/upload/', formData, { headers: headers })
-      .subscribe(r => console.log(r));
-
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = (e) => {
-      // Base64 SVG
-      console.log(reader.result);
-    };
-    const url = URL.createObjectURL(blob);
-    this.imageBlobUrl = url;
-    setTimeout(() => {
-      this.context.clearRect(0, 0, this.width, this.height);
-      this.context.fillStyle = '#fff';
-      this.context.fillRect(0, 0, this.width, this.height);
-      this.context.drawImage(this.imageBg.nativeElement, 0, 0, this.width, this.height);
-      this.context.drawImage(this.image.nativeElement, this.startX, this.startY, this.sizeX, this.sizeY);
-      this.canvas.nativeElement.toBlob((b) => {
-        console.log(b);
-      }, 'image/png', 0.95);
-      // const imgURI = this.canvas.nativeElement.toDataURL('image/png');
-      // console.log(imgURI);
-    }, 200);
+  saveObj() {
+    localStorage.setItem('listObject', JSON.stringify(this.listObject));
   }
 
 }

@@ -6,6 +6,7 @@ import { AppComponent, SafeUrlPipe } from './app.component';
 import { PaintControlComponent } from './paint-control/paint-control.component';
 import { PaintTextComponent } from './paint-control/paint-text/paint-text.component';
 import { PaintImageComponent } from './paint-control/paint-image/paint-image.component';
+import { PaintContainerComponent } from './paint-control/paint-container/paint-container.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { PaintImageComponent } from './paint-control/paint-image/paint-image.com
     PaintControlComponent,
     PaintTextComponent,
     PaintImageComponent,
-    SafeUrlPipe
+    SafeUrlPipe,
+    PaintContainerComponent
   ],
   imports: [
     BrowserModule,

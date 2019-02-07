@@ -37,7 +37,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.listObject = JSON.parse(localStorage.getItem('listObject'));
+    this.listObject = JSON.parse(localStorage.getItem('listObject')) || [];
   }
 
   ngAfterViewInit(): void {

@@ -1,12 +1,11 @@
 import { PaintService } from './paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { PaintObjectType, getTemplate, parseLocalStorage } from './paint.util';
-import { fromEvent } from 'rxjs';
+import { PaintObjectType, getTemplate, parseLocalStorage, urlToBlob } from './paint.util';
+import { fromEvent, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
-
 
 @Component({
   selector: 'app-paint-control',
@@ -113,12 +112,32 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
   }
 
   designComplete() {
-    this.designInfos.image = [];
+    this.designInfos.images = [];
     this.paintService.designComplete();
   }
 
   processingImage(image) {
-    this.designInfos.image.push(image);
+    this.designInfos.images.push(image);
+  }
+
+  async upload() {
+    const images: any[] = this.designInfos.images;
+    for (const image of images) {
+      image.svg = await urlToBlob(image.svgImage);
+    }
+    console.log(images);
+    const formData: FormData = new FormData();
+    images.forEach((image, index) => {
+      const idSvg = this.template.id + '-svg-' + (image.isFront ? '1' : '2');
+      const idPng = this.template.id + '-png-' + (image.isFront ? '1' : '2');
+      formData.append(idSvg, image.svg);
+      formData.append(idPng, image.svg);
+    });
+    formData.append('designInfos', JSON.stringify(this.designInfos));
+    const headers = new HttpHeaders();
+    headers.append('Accept', 'application/json');
+    this.httpClient.post('http://localhost:7001/design/upload/', formData, { headers: headers })
+      .subscribe(r => console.log(r));
   }
 
 }

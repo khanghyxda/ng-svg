@@ -1,6 +1,6 @@
 import { PaintService } from './paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { PaintObjectType, getTemplate, parseLocalStorage, urlToBlob, makeId, calcDpi, calcInfoImage } from './paint.util';
+import { PaintObjectType, getTemplate, parseLocalStorage, urlToBlob, makeId, calcDpi, calcInfoImage, calcInfoText } from './paint.util';
 import { fromEvent, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -136,7 +136,8 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
         const imageInfo = JSON.stringify(calcInfoImage(objectInfo, this.template));
         return imageInfo;
       } else {
-        return null;
+        const textInfo = JSON.stringify(calcInfoText(objectInfo, this.template));
+        return textInfo;
       }
     } else {
       return null;

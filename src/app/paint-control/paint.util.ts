@@ -109,6 +109,13 @@ export function calcInfoImage(objectInfo, template) {
     return { dpi: dpi, widthIn: widthIn, heightIn: heightIn, widthCm: widthIn * InToCm, heightCm: heightIn * InToCm };
 }
 
+export function calcInfoText(objectInfo, template) {
+    const ratioTemplate = template.paintWidth / template.paintWidthIn;
+    const widthIn = objectInfo.size.width / ratioTemplate;
+    const heightIn = objectInfo.size.height / ratioTemplate;
+    return { widthIn: widthIn, heightIn: heightIn, widthCm: widthIn * InToCm, heightCm: heightIn * InToCm };
+}
+
 export function makeId() {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -46,7 +46,6 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
 
   preview() {
     const blobSvg = this.getBlobSvg();
-    const reader = new FileReader();
     const url = blobToUrl(blobSvg);
     const image = new Image();
     image.src = url;
@@ -65,9 +64,9 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
 
   designComplete() {
     const blobSvg = this.getBlobSvg();
-    const reader = new FileReader();
+    const url = blobToUrl(blobSvg);
     const image = new Image();
-    image.src = reader.result.toString();
+    image.src = url;
     setTimeout(() => {
       this.contextPaint.clearRect(0, 0, this.template.paintWidth, this.template.paintHeight);
       this.contextPaint.drawImage(image, 0, 0,

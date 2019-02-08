@@ -21,7 +21,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
   @Input('template') template;
 
   controlSvg;
-  rIcon = 8;
+  rIcon = 10;
   base64: any;
   point1: Point;
   point2: Point;

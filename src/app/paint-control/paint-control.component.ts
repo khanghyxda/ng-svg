@@ -1,6 +1,6 @@
 import { PaintService } from './paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { PaintObjectType, getTemplate, parseLocalStorage, urlToBlob } from './paint.util';
+import { PaintObjectType, getTemplate, parseLocalStorage, urlToBlob, makeId } from './paint.util';
 import { fromEvent, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -36,6 +36,9 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     this.paintService.sendImageAnnounced$.subscribe((image) => {
       this.processingImage(image);
     });
+    this.paintService.deleteObjectAnnounced$.subscribe((id) => {
+      this.deleteObject(id);
+    });
     this.template = getTemplate(1);
     this.params.isDesign = true;
   }
@@ -66,7 +69,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
   }
 
   addText() {
-    const obj = { isFront: this.showFront, type: PaintObjectType.text, text: 'TEST', image: null, selected: false };
+    const obj = { id: makeId(), isFront: this.showFront, type: PaintObjectType.text, text: 'TEST', image: null, selected: false };
     this.listObject.push(obj);
   }
 
@@ -77,6 +80,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
       reader.readAsDataURL(file);
       reader.onloadend = (e) => {
         const obj = {
+          id: makeId(),
           isFront: this.showFront, type: PaintObjectType.image, text: null,
           image: <any>{}, selected: false
         };
@@ -118,6 +122,10 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
 
   processingImage(image) {
     this.designInfos.images.push(image);
+  }
+
+  deleteObject(id) {
+    this.listObject.splice(this.listObject.findIndex((o) => o.id === id), 1);
   }
 
   async upload() {

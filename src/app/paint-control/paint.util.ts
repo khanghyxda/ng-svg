@@ -82,3 +82,28 @@ export function parseLocalStorage(value, defaultValue) {
         return defaultValue;
     }
 }
+
+export function calcInitImage(originWidthPx, originHeightPx, dpi, template) {
+    const ratioTemplate = template.paintWidth / template.paintWidthIn;
+    const resizeWidthIn = originWidthPx / dpi;
+    const resizeHeightIn = originHeightPx / dpi;
+    const resizeWidthPx = resizeWidthIn * ratioTemplate;
+    const resizeHeightPx = resizeHeightIn * ratioTemplate;
+    return { resizeWidthIn: resizeWidthIn, resizeHeightIn: resizeHeightIn, resizeWidthPx: resizeWidthPx, resizeHeightPx: resizeHeightPx };
+}
+
+export function calcDpi(originWidthPx, resizeWidthPx, template) {
+    const ratioTemplate = template.paintWidth / template.paintWidthIn;
+    const resizeWidthIn = resizeWidthPx / ratioTemplate;
+    const dpi = originWidthPx / resizeWidthIn;
+    return dpi;
+}
+
+export function makeId() {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 10; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}

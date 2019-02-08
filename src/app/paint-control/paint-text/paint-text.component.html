@@ -6,7 +6,7 @@
     <xhtml:div #edit class="text-edit" contenteditable="true" [textContent]="objectInfo.text" (input)="changeText($event)"></xhtml:div>
   </foreignObject>
 </svg:g>
-<svg:g #select [style.opacity]="objectInfo.selected ? '1.0' : '0.0'" [attr.transform]="'matrix(' + objectInfo.a + ',' + objectInfo.b + ',' + objectInfo.c + ',' + objectInfo.d + ','+ objectInfo.e + ','+ objectInfo.f +  ')'">
+<svg:g #select [style.opacity]="objectInfo.selected ? '1.0' : '0.0'" class="pointer" [attr.transform]="'matrix(' + objectInfo.a + ',' + objectInfo.b + ',' + objectInfo.c + ',' + objectInfo.d + ','+ objectInfo.e + ','+ objectInfo.f +  ')'">
   <svg:rect #rectSelect x="0" y="1" [attr.width]="objectInfo.width" height="16" class="svg_select_points" />
   <svg:image #topleft xlink:href="./assets/icon/delete.svg" [attr.x]="0 - rIcon" [attr.y]="0 - rIcon" [attr.width]="rIcon * 2"
     [attr.height]="rIcon * 2" />

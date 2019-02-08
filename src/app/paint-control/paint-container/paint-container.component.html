@@ -7,8 +7,8 @@
       xmlns:xlink="http://www.w3.org/1999/xlink" [style.width]="template.paintWidth"
       [style.height]="template.paintHeight" xmlns="http://www.w3.org/2000/svg">
       <g *ngFor="let item of getListObj()">
-        <g *ngIf="item.type==0" app-paint-text [objectInfo]="item"></g>
-        <g *ngIf="item.type==1" app-paint-image [objectInfo]="item"></g>
+        <g *ngIf="item.type==0" app-paint-text [objectInfo]="item" [template]="template"></g>
+        <g *ngIf="item.type==1" app-paint-image [objectInfo]="item" [template]="template"></g>
       </g>
     </svg>
   </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { tap, takeUntil, flatMap, map, } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
-import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide, urlToBase64 } from '../paint.util';
+import { Point, getPointAfterTransform, getSideOfLine, calcAngle, calcSide, urlToBase64, calcInitImage, calcDpi } from '../paint.util';
 import { PaintService } from '../paint.service';
 
 @Component({
@@ -17,9 +17,11 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
   @ViewChild('image') image: ElementRef;
   @ViewChild('bottomright') bottomright: ElementRef;
   @ViewChild('topright') topright: ElementRef;
+  @ViewChild('topleft') topleft: ElementRef;
+  @Input('template') template;
 
   controlSvg;
-  rIcon = 12;
+  rIcon = 8;
   base64: any;
 
   constructor(private paintService: PaintService) {
@@ -28,13 +30,17 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.controlSvg = this.main.nativeElement.parentNode.parentNode.parentNode;
     if (this.objectInfo.size === undefined) {
+      const calcInit = calcInitImage(this.objectInfo.image.width, this.objectInfo.image.height, 150, this.template);
+      console.log(calcInit);
+      const calcDpiNum = calcDpi(this.objectInfo.image.width, calcInit.resizeWidthPx, this.template);
+      console.log(calcDpiNum);
       this.objectInfo.size = {};
-      this.objectInfo.size.width = this.objectInfo.image.width;
-      this.objectInfo.size.height = this.objectInfo.image.height;
+      this.objectInfo.size.width = calcInit.resizeWidthPx;
+      this.objectInfo.size.height = calcInit.resizeHeightPx;
     }
     if (this.objectInfo.pt === undefined) {
       this.objectInfo.pt = {};
-      this.objectInfo.pt.x = 50;
+      this.objectInfo.pt.x = this.template.paintWidth / 2 - this.objectInfo.size.width / 2;
       this.objectInfo.pt.y = 50;
     }
     if (this.objectInfo.angle === undefined) {
@@ -146,6 +152,15 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
         };
       }), takeUntil(mouseup));
     }));
+
+    const downDelete = fromEvent(this.topleft.nativeElement, 'mousedown')
+      .pipe(tap((md: MouseEvent) => { md.preventDefault(); md.stopPropagation(); }));
+
+    downDelete.subscribe((md) => {
+      if (this.objectInfo.selected) {
+        this.paintService.deleteObject(this.objectInfo.id);
+      }
+    });
 
     down.subscribe((md) => {
       this.paintService.removeSelected();

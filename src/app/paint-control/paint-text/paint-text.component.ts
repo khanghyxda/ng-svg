@@ -17,6 +17,8 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
   @ViewChild('edit') edit: ElementRef;
   @ViewChild('bottomright') bottomright: ElementRef;
   @ViewChild('topright') topright: ElementRef;
+  @ViewChild('topleft') topleft: ElementRef;
+  @Input('template') template;
 
   controlSvg;
   rIcon = 5;
@@ -127,6 +129,14 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
       }), takeUntil(mouseup));
     }));
 
+    const downDelete = fromEvent(this.topleft.nativeElement, 'mousedown')
+      .pipe(tap((md: MouseEvent) => { md.preventDefault(); md.stopPropagation(); }));
+
+    downDelete.subscribe((md) => {
+      if (this.objectInfo.selected) {
+        this.paintService.deleteObject(this.objectInfo.id);
+      }
+    });
 
     down.subscribe((md) => {
       this.paintService.removeSelected();

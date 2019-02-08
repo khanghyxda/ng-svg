@@ -21,7 +21,7 @@ export class AppComponent {
         id: 1,
         width: 400, height: 400,
         paintWidth: 160, paintHeight: 240,
-        paintWidthCm: 32, paintHeightCm: 48,
+        paintWidthIn: 8, paintHeightIn: 12,
         startX: 120, startY: 100,
         imageBgFront: '/assets/front.png', imageBgBack: '/assets/back.png',
       }

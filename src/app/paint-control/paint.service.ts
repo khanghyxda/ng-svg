@@ -12,6 +12,7 @@ export class PaintService {
   private cleanListAnnouncedSource = new Subject();
   private designCompleteAnnouncedSource = new Subject();
   private sendImageAnnouncedSource = new Subject<IImage>();
+  private deleteObjectAnnouncedSource = new Subject<String>();
 
   removeSelectedAnnounced$ = this.removeSelectedAnnouncedSource.asObservable();
   previewAnnounced$ = this.previewAnnouncedSource.asObservable();
@@ -19,6 +20,7 @@ export class PaintService {
   cleanListAnnounced$ = this.cleanListAnnouncedSource.asObservable();
   designCompleteAnnounced$ = this.designCompleteAnnouncedSource.asObservable();
   sendImageAnnounced$ = this.sendImageAnnouncedSource.asObservable();
+  deleteObjectAnnounced$ = this.deleteObjectAnnouncedSource.asObservable();
 
   removeSelected() {
     this.removeSelectedAnnouncedSource.next();
@@ -42,6 +44,10 @@ export class PaintService {
 
   sendImage(image: IImage) {
     this.sendImageAnnouncedSource.next(image);
+  }
+
+  deleteObject(id) {
+    this.deleteObjectAnnouncedSource.next(id);
   }
 
   constructor() {

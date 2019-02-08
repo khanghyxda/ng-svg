@@ -23,12 +23,18 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
   controlSvg;
   rIcon = 8;
   base64: any;
+  point1: Point;
+  point2: Point;
+  point3: Point;
 
   constructor(private paintService: PaintService) {
   }
 
   ngOnInit() {
     this.controlSvg = this.main.nativeElement.parentNode.parentNode.parentNode;
+    this.point1 = new Point(0, 0);
+    this.point2 = new Point(0, 0);
+    this.point3 = new Point(0, 0);
     if (this.objectInfo.size === undefined) {
       const calcInit = calcInitImage(this.objectInfo.image.width, this.objectInfo.image.height, 150, this.template);
       console.log(calcInit);
@@ -89,7 +95,7 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
       const bottomRight = new Point(this.objectInfo.pt.x + this.objectInfo.size.width, this.objectInfo.pt.y + this.objectInfo.size.height);
       const offset = this.controlSvg.getBoundingClientRect();
       const matrixStart = element.getScreenCTM();
-      const point90 = new Point(this.objectInfo.pt.x + this.objectInfo.size.height
+      const point90 = new Point(this.objectInfo.pt.x + this.objectInfo.size.width
         + this.objectInfo.size.height * this.objectInfo.size.height / this.objectInfo.size.width, this.objectInfo.pt.y);
       const point90Transform = getPointAfterTransform(this.controlSvg, matrixStart, point90);
       const startPoint = new Point(md.clientX - offset.left, md.clientY - offset.top);
@@ -101,6 +107,10 @@ export class PaintImageComponent implements OnInit, AfterViewInit {
         const angle = calcAngle(topLeftTransform, startPoint, endPoint);
         const projetion = Math.abs(Math.cos(angle * Math.PI / 180) * calcSide(startPoint, endPoint));
         const diagonal = calcSide(topLeft, bottomRight);
+        this.point1 = endPoint;
+        this.point2 = point90Transform;
+        this.point3 = startPoint;
+        console.log(sideOfLine);
         let ratio = 1 + projetion / diagonal;
         if (sideOfLine < 0) {
           ratio = 1 - projetion / diagonal;

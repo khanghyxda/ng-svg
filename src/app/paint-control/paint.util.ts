@@ -1,3 +1,5 @@
+export const InToCm = 2.54;
+
 export function calcAngle(pointA, pointB, pointC) {
     const a = calcSide(pointA, pointC);
     const b = calcSide(pointB, pointA);
@@ -97,6 +99,14 @@ export function calcDpi(originWidthPx, resizeWidthPx, template) {
     const resizeWidthIn = resizeWidthPx / ratioTemplate;
     const dpi = originWidthPx / resizeWidthIn;
     return dpi;
+}
+
+export function calcInfoImage(objectInfo, template) {
+    const ratioTemplate = template.paintWidth / template.paintWidthIn;
+    const dpi = calcDpi(objectInfo.image.width, objectInfo.size.width, template);
+    const widthIn = objectInfo.size.width / ratioTemplate;
+    const heightIn = objectInfo.size.height / ratioTemplate;
+    return { dpi: dpi, widthIn: widthIn, heightIn: heightIn, widthCm: widthIn * InToCm, heightCm: heightIn * InToCm };
 }
 
 export function makeId() {

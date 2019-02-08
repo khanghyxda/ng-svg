@@ -23,6 +23,9 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
   controlSvg;
   rIcon = 5;
   currentMatrix: SVGMatrix;
+  point1: SVGPoint;
+  point2: SVGPoint;
+  point3: SVGPoint;
 
   constructor(private paintService: PaintService) {
   }
@@ -30,6 +33,9 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.controlSvg = this.main.nativeElement.parentNode.parentNode.parentNode;
     const element = this.text.nativeElement;
+    this.point1 = this.getPoint(0, 0);
+    this.point2 = this.getPoint(0, 0);
+    this.point3 = this.getPoint(0, 0);
     if (this.objectInfo.width === undefined) {
       const bbox = element.getBBox();
       this.objectInfo.width = bbox.width;
@@ -77,23 +83,35 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     const downResize = fromEvent(this.bottomright.nativeElement, 'mousedown')
       .pipe(tap((md: MouseEvent) => { md.preventDefault(); md.stopPropagation(); }));
     const mouseResize = downResize.pipe(flatMap((md: MouseEvent) => {
-      this.currentMatrix = this.getCurrentMatrix();
-      const bbox = element.getBBox();
-      const topLeftTransform = this.getPointAfter(this.getPoint(bbox.x, bbox.y), this.currentMatrix);
-      const bottomRightTransform = this.getPointAfter(this.getPoint(bbox.x + bbox.width, bbox.y + bbox.height), this.currentMatrix);
-      const point90Transform = this.getPointAfter(this.getPoint(bbox.x + bbox.height
-        + bbox.height * bbox.height / bbox.width, bbox.y), this.currentMatrix);
-      const offset = this.controlSvg.getBoundingClientRect();
-      const startPoint = new Point(md.clientX - offset.left, md.clientY - offset.top);
       return moveParent.pipe(map((mm: MouseEvent) => {
         mm.preventDefault();
+        this.currentMatrix = this.getCurrentMatrix();
+        const bbox = element.getBBox();
+        const topLeftTransform = this.getPointAfter(this.getPoint(bbox.x, bbox.y), this.currentMatrix);
+        const bottomRightTransform = this.getPointAfter(this.getPoint(bbox.x + bbox.width, bbox.y + bbox.height), this.currentMatrix);
+        const point90Transform = this.getPointAfter(this.getPoint(bbox.x + bbox.width
+          + bbox.height * bbox.height / bbox.width, bbox.y), this.currentMatrix);
+        const offset = this.controlSvg.getBoundingClientRect();
         const endPoint = new Point(mm.clientX - offset.left, mm.clientY - offset.top);
         const sideOfLine = getSideOfLine(point90Transform, bottomRightTransform, endPoint);
         const angle = calcAngle(topLeftTransform, bottomRightTransform, endPoint);
-        const projetion = Math.abs(Math.cos(angle * Math.PI / 180) * calcSide(startPoint, endPoint));
+        const projetion = Math.abs(Math.cos(angle * Math.PI / 180) * calcSide(bottomRightTransform, endPoint));
         const diagonal = calcSide(topLeftTransform, bottomRightTransform);
+        this.point1 = this.getPoint(endPoint.x, endPoint.y);
+        this.point2 = bottomRightTransform;
+        this.point3 = point90Transform;
+        console.log(bbox);
+        console.log(point90Transform);
+        console.log(topLeftTransform);
+        console.log(bottomRightTransform);
+        console.log(endPoint);
         let ratio = 1 + projetion / diagonal;
         if (sideOfLine < 0) {
+          if (diagonal < 30) {
+            return {
+              ratio: 1,
+            };
+          }
           ratio = 1 - projetion / diagonal;
         }
         return {
@@ -115,7 +133,6 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
         const endPoint = this.getPoint(mm.clientX - offset.left, mm.clientY - offset.top);
         const changeAngle = calcAngle(topRightTransform, topLeftTransform, endPoint);
         const sideOfLine = getSideOfLine(topRightTransform, topLeftTransform, endPoint);
-        const vector = { x: centerTransform.x - topLeftTransform.x, y: centerTransform.y - topLeftTransform.y };
         if (sideOfLine < 0) {
           return {
             angle:
@@ -156,6 +173,7 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
         if (this.objectInfo.selected) {
           const afterMatrix = this.currentMatrix.scale(pos.ratio);
           this.setMatrix(afterMatrix);
+          this.calcHeight();
         }
       });
 
@@ -172,7 +190,20 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       const bbox = this.text.nativeElement.getBBox();
       this.objectInfo.width = bbox.width;
+      this.calcHeight();
     }, 100);
+  }
+
+
+  calcHeight() {
+    this.objectInfo.size = {};
+    const matrix = this.getCurrentMatrix();
+    const bbox = this.text.nativeElement.getBBox();
+    const topLeftTransform = this.getPointAfter(this.getPoint(bbox.x, bbox.y), matrix);
+    const topRightTransform = this.getPointAfter(this.getPoint(bbox.x + bbox.width, bbox.y), matrix);
+    const bottomLeftTransform = this.getPointAfter(this.getPoint(bbox.x, bbox.y + bbox.height), matrix);
+    this.objectInfo.size.height = calcSide(topLeftTransform, bottomLeftTransform);
+    this.objectInfo.size.width = calcSide(topLeftTransform, topRightTransform);
   }
 
   setMatrix(matrix) {

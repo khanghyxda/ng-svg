@@ -1,17 +1,24 @@
-<svg:g #main [attr.transform]="'matrix(' + objectInfo.a + ',' + objectInfo.b + ',' + objectInfo.c + ',' + objectInfo.d + ',' + objectInfo.e + ','+ objectInfo.f +  ')'">
+<svg:g #main
+  [attr.transform]="'matrix(' + objectInfo.a + ',' + objectInfo.b + ',' + objectInfo.c + ',' + objectInfo.d + ',' + objectInfo.e + ','+ objectInfo.f +  ')'">
   <text #text y="14" style="font-size: 14px; font-family: 'Courier New', Courier, monospace">
     <tspan dx="0" dy="0">{{objectInfo.text}}</tspan>
   </text>
   <foreignObject y="2" style="font-size: 14px; font-family: 'Courier New', Courier, monospace">
-    <xhtml:div #edit class="text-edit" contenteditable="true" [textContent]="objectInfo.text" (input)="changeText($event)"></xhtml:div>
+    <xhtml:div #edit class="text-edit" contenteditable="true" [textContent]="objectInfo.text"
+      (input)="changeText($event)"></xhtml:div>
   </foreignObject>
 </svg:g>
-<svg:g #select [style.opacity]="objectInfo.selected ? '1.0' : '0.0'" class="pointer" [attr.transform]="'matrix(' + objectInfo.a + ',' + objectInfo.b + ',' + objectInfo.c + ',' + objectInfo.d + ','+ objectInfo.e + ','+ objectInfo.f +  ')'">
+<svg:g #select [style.opacity]="objectInfo.selected ? '1.0' : '0.0'" class="pointer"
+  [attr.transform]="'matrix(' + objectInfo.a + ',' + objectInfo.b + ',' + objectInfo.c + ',' + objectInfo.d + ','+ objectInfo.e + ','+ objectInfo.f +  ')'">
   <svg:rect #rectSelect x="0" y="1" [attr.width]="objectInfo.width" height="16" class="svg_select_points" />
-  <svg:image #topleft xlink:href="./assets/icon/delete.svg" [attr.x]="0 - rIcon" [attr.y]="0 - rIcon" [attr.width]="rIcon * 2"
-    [attr.height]="rIcon * 2" />
+  <svg:image #topleft xlink:href="./assets/icon/delete.svg" [attr.x]="0 - rIcon" [attr.y]="0 - rIcon"
+    [attr.width]="rIcon * 2" [attr.height]="rIcon * 2" />
   <svg:image #topright xlink:href="./assets/icon/rotate.svg" [attr.x]="objectInfo.width - rIcon" [attr.y]="0 - rIcon"
     [attr.width]="rIcon * 2" [attr.height]="rIcon * 2" />
-  <svg:image #bottomright xlink:href="./assets/icon/resize.svg" [attr.x]="objectInfo.width - rIcon" [attr.y]="16 - rIcon"
-    [attr.width]="rIcon * 2" [attr.height]="rIcon * 2" clip-path="url(#rectBottomRight)" fill="red" />
+  <svg:image #bottomright xlink:href="./assets/icon/resize.svg" [attr.x]="objectInfo.width - rIcon"
+    [attr.y]="16 - rIcon" [attr.width]="rIcon * 2" [attr.height]="rIcon * 2" clip-path="url(#rectBottomRight)"
+    fill="red" />
 </svg:g>
+<!-- <svg:circle [attr.cx]="point1.x" [attr.cy]="point1.y" r="1" fill="red" />
+<svg:circle [attr.cx]="point2.x" [attr.cy]="point2.y" r="1" fill="blue" />
+<svg:circle [attr.cx]="point3.x" [attr.cy]="point3.y" r="1" fill="green" /> -->

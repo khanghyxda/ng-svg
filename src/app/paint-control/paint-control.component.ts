@@ -1,6 +1,6 @@
 import { PaintService } from './paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { PaintObjectType, getTemplate, parseLocalStorage, urlToBlob, makeId } from './paint.util';
+import { PaintObjectType, getTemplate, parseLocalStorage, urlToBlob, makeId, calcDpi, calcInfoImage } from './paint.util';
 import { fromEvent, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -126,6 +126,21 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
 
   deleteObject(id) {
     this.listObject.splice(this.listObject.findIndex((o) => o.id === id), 1);
+  }
+
+  getInfoSelected() {
+    const finds = this.listObject.filter((o) => o.selected === true);
+    if (finds.length > 0) {
+      const objectInfo = finds[0];
+      if (objectInfo.text == null) {
+        const imageInfo = JSON.stringify(calcInfoImage(objectInfo, this.template));
+        return imageInfo;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   async upload() {

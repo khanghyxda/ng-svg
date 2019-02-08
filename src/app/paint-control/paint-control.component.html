@@ -16,6 +16,9 @@
   <button (click)="design()">Design</button>
   <button (click)="preview()">Preview</button>
 </div>
+<div>
+  {{getInfoSelected()}}
+</div>
 <div class="design-container">
   <app-paint-container [isFront]="true" [params]="params" [template]="template" [(listObject)]="listObject" [hidden]="!showFront"></app-paint-container>
   <app-paint-container [isFront]="false" [params]="params" [template]="template" [(listObject)]="listObject" [hidden]="showFront"></app-paint-container>

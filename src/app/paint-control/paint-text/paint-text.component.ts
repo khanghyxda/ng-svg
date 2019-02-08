@@ -131,8 +131,8 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
       const offset = this.controlSvg.getBoundingClientRect();
       return moveParent.pipe(map((mm: MouseEvent) => {
         const endPoint = this.getPoint(mm.clientX - offset.left, mm.clientY - offset.top);
-        const changeAngle = calcAngle(topRightTransform, topLeftTransform, endPoint);
-        const sideOfLine = getSideOfLine(topRightTransform, topLeftTransform, endPoint);
+        const changeAngle = calcAngle(topRightTransform, centerTransform, endPoint);
+        const sideOfLine = getSideOfLine(topRightTransform, centerTransform, endPoint);
         if (sideOfLine < 0) {
           return {
             angle:

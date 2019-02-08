@@ -36,6 +36,49 @@ export enum PaintObjectType {
 }
 
 export function getTemplate(id) {
-    const designTemplates: any[] = JSON.parse(localStorage.getItem('designTemplates'));
+    const designTemplates: any[] = parseLocalStorage('designTemplates', []);
     return designTemplates.filter((o) => o.id = id)[0];
+}
+
+export function blobToUrl(blob) {
+    return URL.createObjectURL(blob);
+}
+
+export async function urlToBase64(url) {
+    try {
+        const fetchData = await fetch(url);
+        const dataBlob = await fetchData.blob();
+        const reader = new FileReader();
+        reader.readAsDataURL(dataBlob);
+        const result = await new Promise((resolve, reject) => {
+            reader.onloadend = () => {
+                resolve(reader.result);
+            };
+        });
+        return result;
+    } catch (error) {
+        throw (error);
+    }
+}
+
+export async function urlToBlob(url) {
+    try {
+        const fetchData = await fetch(url);
+        const dataBlob = await fetchData.blob();
+        return dataBlob;
+    } catch (error) {
+        throw (error);
+    }
+}
+
+export function parseLocalStorage(value, defaultValue) {
+    try {
+        const storageString = localStorage.getItem(value);
+        if (storageString === undefined || storageString == null || storageString === '') {
+            return defaultValue;
+        }
+        return JSON.parse(localStorage.getItem(value));
+    } catch (error) {
+        return defaultValue;
+    }
 }

@@ -1,11 +1,11 @@
 <div class="design-wrapper" [style.width]="template.width" [style.height]="template.height" [hidden]="!params.isDesign">
   <img class="image-bg" #imageBg [src]="isFront ? template.imageBgFront : template.imageBgBack" [width]="template.width"
     [height]="template.height" />
-  <div [style.width]="template.sizeX+'px'" [style.height]="template.sizeY+'px'" class="svg-wrapper" [style.top]="template.startY+'px'"
-    [style.left]="template.startX+'px'">
+  <div [style.width]="template.sizeX+'px'" [style.height]="template.sizeY+'px'" class="svg-wrapper"
+    [style.top]="template.startY+'px'" [style.left]="template.startX+'px'">
     <svg #control [attr.viewBox]="'0 0 ' + template.paintWidth + ' ' +  template.paintHeight" id="svg-control"
-      xmlns:xlink="http://www.w3.org/1999/xlink" [style.width]="template.paintWidth" [style.height]="template.paintHeight"
-      xmlns="http://www.w3.org/2000/svg">
+      xmlns:xlink="http://www.w3.org/1999/xlink" [style.width]="template.paintWidth"
+      [style.height]="template.paintHeight" xmlns="http://www.w3.org/2000/svg">
       <g *ngFor="let item of getListObj()">
         <g *ngIf="item.type==0" app-paint-text [objectInfo]="item"></g>
         <g *ngIf="item.type==1" app-paint-image [objectInfo]="item"></g>
@@ -15,4 +15,7 @@
 </div>
 <div class="design-preview" [style.width]="template.width" [style.height]="template.height" [hidden]="params.isDesign">
   <canvas #canvas [width]="template.width" [height]="template.height"></canvas>
+</div>
+<div class="design-paint-image" [style.width]="template.paintWidth" [style.height]="template.paintHeight" [hidden]="true">
+  <canvas #canvasPaint [width]="template.paintWidth" [height]="template.paintWidth"></canvas>
 </div>

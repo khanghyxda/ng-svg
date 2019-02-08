@@ -1,6 +1,6 @@
 import { PaintService } from './paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { PaintObjectType, getTemplate } from './paint.util';
+import { PaintObjectType, getTemplate, parseLocalStorage } from './paint.util';
 import { fromEvent } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -16,10 +16,12 @@ import { FormControl } from '@angular/forms';
 })
 export class PaintControlComponent implements OnInit, AfterViewInit {
 
-  template = {};
+  template = <any>{};
+  listDesign = [];
   listObject = [
 
   ];
+  designInfos = <any>{};
 
   showFront = true;
   params = <any>{};
@@ -32,12 +34,18 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
       this.listObject = [];
       this.saveObj();
     });
+    this.paintService.sendImageAnnounced$.subscribe((image) => {
+      this.processingImage(image);
+    });
     this.template = getTemplate(1);
     this.params.isDesign = true;
   }
 
   ngOnInit() {
-    this.listObject = JSON.parse(localStorage.getItem('listObject')) || [];
+    this.listDesign = parseLocalStorage('listDesign', []);
+    this.listObject = this.listDesign[this.template.id] !== undefined ? this.listDesign[this.template.id]['listObject'] || [] : [];
+    this.designInfos = this.listDesign[this.template.id] !== undefined ? this.listDesign[this.template.id]['designInfos'] || {} : {};
+    console.log(this.listDesign);
   }
 
   ngAfterViewInit(): void {
@@ -98,11 +106,19 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
   }
 
   saveObj() {
-    localStorage.setItem('listObject', JSON.stringify(this.listObject));
+    this.listDesign[this.template.id] = {};
+    this.listDesign[this.template.id]['listObject'] = this.listObject;
+    this.listDesign[this.template.id]['designInfos'] = this.designInfos;
+    localStorage.setItem('listDesign', JSON.stringify(this.listDesign));
   }
 
   designComplete() {
+    this.designInfos.image = [];
     this.paintService.designComplete();
+  }
+
+  processingImage(image) {
+    this.designInfos.image.push(image);
   }
 
 }

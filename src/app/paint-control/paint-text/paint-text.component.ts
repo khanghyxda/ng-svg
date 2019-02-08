@@ -180,7 +180,9 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
     mouseRotate
       .subscribe((pos) => {
         if (this.objectInfo.selected) {
-          this.setMatrix(this.currentMatrix.scale(0.01).rotate(pos.angle).scale(100));
+          const bbox = element.getBBox();
+          this.setMatrix(this.currentMatrix.translate(bbox.width / 2, bbox.height / 2)
+            .rotate(pos.angle).translate(-bbox.width / 2, -bbox.height / 2));
         }
       });
   }

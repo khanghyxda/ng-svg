@@ -69,7 +69,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
   }
 
   addText() {
-    const obj = { id: makeId(), isFront: this.showFront, type: PaintObjectType.text, text: 'TEST', image: null, selected: false };
+    const obj = { id: makeId(), isFront: this.showFront, type: PaintObjectType.text, text: 'TEXT', image: null, selected: false };
     this.listObject.push(obj);
   }
 

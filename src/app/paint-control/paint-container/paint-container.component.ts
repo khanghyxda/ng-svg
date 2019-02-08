@@ -47,10 +47,11 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
   preview() {
     const blobSvg = this.getBlobSvg();
     const reader = new FileReader();
+    const url = blobToUrl(blobSvg);
     reader.readAsDataURL(blobSvg);
     reader.onloadend = () => {
       const image = new Image();
-      image.src = reader.result.toString();
+      image.src = url;
       setTimeout(() => {
         this.context.clearRect(0, 0, this.template.width, this.template.height);
         this.context.fillStyle = '#fff';

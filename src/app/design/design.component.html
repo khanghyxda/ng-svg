@@ -1,7 +1,8 @@
 <p [routerLink]="['/home']" >
   Go home
 </p>
-
+<div #ref id="contenteditablediv" contenteditable="true" [textContent]="searchText">12
+</div>
 <div style="margin: 300px 300px">
   <app-paint-control></app-paint-control>
 </div>

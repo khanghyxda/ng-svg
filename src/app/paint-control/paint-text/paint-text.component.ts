@@ -189,7 +189,7 @@ export class PaintTextComponent implements OnInit, AfterViewInit {
   }
 
   changeText(event) {
-    this.objectInfo.text = this.edit.nativeElement.innerHTML;
+    this.objectInfo.text = this.edit.nativeElement.textContent;
     setTimeout(() => {
       const bbox = this.text.nativeElement.getBBox();
       this.objectInfo.width = bbox.width;

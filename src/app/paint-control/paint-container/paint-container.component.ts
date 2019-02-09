@@ -1,6 +1,6 @@
 import { PaintService, IImage } from './../paint.service';
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { blobToUrl } from '../paint.util';
+import { blobToUrl, urlToBase64 } from '../paint.util';
 
 @Component({
   selector: 'app-paint-container',
@@ -65,20 +65,22 @@ export class PaintContainerComponent implements OnInit, AfterViewInit {
   designComplete() {
     const blobSvg = this.getBlobSvg();
     const url = blobToUrl(blobSvg);
-    const image = new Image();
-    image.src = url;
-    setTimeout(() => {
-      this.contextPaint.clearRect(0, 0, this.template.paintWidth, this.template.paintHeight);
-      this.contextPaint.drawImage(image, 0, 0,
-        this.template.paintWidth, this.template.paintHeight);
-      this.canvas.nativeElement.toBlob((blobCanvas) => {
-        const iImage = new IImage();
-        iImage.svgImage = blobToUrl(blobSvg);
-        iImage.pngImage = blobToUrl(blobCanvas);
-        iImage.isFront = this.isFront;
-        this.paintService.sendImage(iImage);
-      }, 'image/png', 2);
-    }, 200);
+    urlToBase64(url).then((base64) => {
+      const image = new Image();
+      image.src = base64;
+      setTimeout(() => {
+        this.contextPaint.clearRect(0, 0, this.template.paintWidth, this.template.paintHeight);
+        this.contextPaint.drawImage(image, 0, 0,
+          this.template.paintWidth, this.template.paintHeight);
+        this.canvasPaint.nativeElement.toBlob((blobCanvas) => {
+          const iImage = new IImage();
+          iImage.svgImage = blobToUrl(blobSvg);
+          iImage.pngImage = blobToUrl(blobCanvas);
+          iImage.isFront = this.isFront;
+          this.paintService.sendImage(iImage);
+        }, 'image/png', 2);
+      }, 200);
+    });
   }
 
   getBlobSvg() {

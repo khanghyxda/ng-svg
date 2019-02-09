@@ -57,7 +57,7 @@ export async function urlToBase64(url) {
                 resolve(reader.result);
             };
         });
-        return result;
+        return <string>result;
     } catch (error) {
         throw (error);
     }

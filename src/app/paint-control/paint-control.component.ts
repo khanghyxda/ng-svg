@@ -148,6 +148,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
     const images: any[] = this.designInfos.images;
     for (const image of images) {
       image.svg = await urlToBlob(image.svgImage);
+      image.png = await urlToBlob(image.pngImage);
     }
     console.log(images);
     const formData: FormData = new FormData();
@@ -155,7 +156,7 @@ export class PaintControlComponent implements OnInit, AfterViewInit {
       const idSvg = this.template.id + '-svg-' + (image.isFront ? '1' : '2');
       const idPng = this.template.id + '-png-' + (image.isFront ? '1' : '2');
       formData.append(idSvg, image.svg);
-      formData.append(idPng, image.svg);
+      formData.append(idPng, image.png);
     });
     formData.append('designInfos', JSON.stringify(this.designInfos));
     const headers = new HttpHeaders();
